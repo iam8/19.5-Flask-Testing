@@ -8,4 +8,14 @@
         <div>{{ row }}</div>
     {% endfor %}
 
+    <h3>Guess a word!</h3>
+
+    {# Form for submitting a word guess #}
+    <form action="/submit_guess" method="POST">
+        <label for="word-guess">Guess:</label>
+        <input type="text" name="word-guess" placeholder="Enter a word">
+
+        <button>Submit</button>
+    </form>
+
 {% endblock content %}
