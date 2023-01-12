@@ -22,9 +22,20 @@ async function submitGuess(word) {
 }
 
 
-// Get the validity of the word from the server response data
-function getWordValidity(response) {
-    return response.data["result"];
+// Get the validity of the word from the server response data and return the appropriate validity
+// message depending on the validity
+function getValidityMsg(response) {
+    const validity = response.data["result"];
+
+    if (validity === "ok") {
+        return "The word is valid!"
+    }
+
+    if (validity === "not-on-board") {
+        return "The word doesn't exist on the board - try again!"
+    }
+
+    return "Your guess is not a word - try again!"
 }
 
 
@@ -37,7 +48,6 @@ $guessForm.on("submit", async function (evt) {
     $(this).trigger("reset");
 
     const response = await submitGuess(word_guess);
-    const validity = getWordValidity(response);
-    $validityMsg.text(`The word is ${validity}`);
-
+    const validity = getValidityMsg(response);
+    $validityMsg.text(validity);
 })
