@@ -5,7 +5,7 @@
 Main code for Boggle application - Flask setup, routes, and view functions.
 """
 
-from flask import Flask, request, render_template, redirect, flash, session
+from flask import Flask, request, render_template, redirect, flash, session, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 
 from boggle import Boggle
@@ -21,7 +21,7 @@ BOARD_KEY = "board"
 boggle_game = Boggle()
 
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/", methods=["GET"])
 def homepage():
     """
     Display the homepage, where the Boggle board will be located.
@@ -30,8 +30,19 @@ def homepage():
     board = boggle_game.make_board()
     session[BOARD_KEY] = board
 
-    if request.method == "POST":
-
-        return f"<body>{str(request.get_json())}</body>"
-
     return render_template("/boggle_home.jinja2", board=board)
+
+
+@app.route("/process_guess", methods=["POST"])
+def process_guess():
+    """
+    Retrieve and process guess input by user.
+    """
+
+    request_data = request.get_json()
+    guess = request_data["guess"]
+    board = session[BOARD_KEY]
+
+    word_validity = boggle_game.check_valid_word(board, guess)
+
+    return jsonify(result=word_validity)
