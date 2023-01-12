@@ -21,7 +21,7 @@ BOARD_KEY = "board"
 boggle_game = Boggle()
 
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def homepage():
     """
     Display the homepage, where the Boggle board will be located.
@@ -29,5 +29,9 @@ def homepage():
 
     board = boggle_game.make_board()
     session[BOARD_KEY] = board
+
+    if request.method == "POST":
+
+        return f"<body>{str(request.get_json())}</body>"
 
     return render_template("/boggle_home.jinja2", board=board)
