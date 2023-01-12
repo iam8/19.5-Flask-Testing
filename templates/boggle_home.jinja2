@@ -3,5 +3,9 @@
 {% extends "base.jinja2" %}
 
 {% block content %}
-    {{ board }}
+
+    {% for row in board %}
+        <div>{{ row }}</div>
+    {% endfor %}
+
 {% endblock content %}
