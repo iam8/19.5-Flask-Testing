@@ -16,6 +16,8 @@ app.config["SECRET_KEY"] = "ceva foarte secreta"
 
 debug = DebugToolbarExtension(app)
 
+BOARD_KEY = "board"
+
 boggle_game = Boggle()
 
 
@@ -26,5 +28,6 @@ def homepage():
     """
 
     board = boggle_game.make_board()
+    session[BOARD_KEY] = board
 
     return render_template("/boggle_home.jinja2", board=board)
