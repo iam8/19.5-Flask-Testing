@@ -17,3 +17,14 @@ app.config["SECRET_KEY"] = "ceva foarte secreta"
 debug = DebugToolbarExtension(app)
 
 boggle_game = Boggle()
+
+
+@app.route("/")
+def homepage():
+    """
+    Display the homepage, where the Boggle board will be located.
+    """
+
+    board = boggle_game.make_board()
+
+    return render_template("/boggle_home.jinja2", board=board)
