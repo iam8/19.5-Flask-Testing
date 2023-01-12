@@ -9,7 +9,7 @@ const $wordInput = $("#word-input");
 
 async function submitGuess(word) {
     const response = await axios.post(
-        "/",
+        "/process_guess",
         {
             "guess": word
         }
