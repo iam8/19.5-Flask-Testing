@@ -5,7 +5,7 @@
 Main code for Boggle application - Flask setup, routes, and view functions.
 """
 
-from flask import Flask, request, render_template, redirect, flash, session, jsonify
+from flask import Flask, request, render_template, session, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 
 from boggle import Boggle
