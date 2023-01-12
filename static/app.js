@@ -8,6 +8,8 @@ const $guessForm = $("#guess-form");
 const $wordInput = $("#word-input");
 const $validityMsg = $("#validity-msg")
 
+let scoreTotal = 0;
+
 
 // Submit the word guess to the server at '/process_guess' and return the server response
 async function submitGuess(word) {
