@@ -6,7 +6,8 @@
 
 const $guessForm = $("#guess-form");
 const $wordInput = $("#word-input");
-const $validityMsg = $("#validity-msg")
+const $validityMsg = $("#validity-msg");
+const $scoreTotal = $("#score-total");
 
 let scoreTotal = 0;
 
@@ -54,6 +55,7 @@ function calculateScore(word, validityMsg) {
 // Upon submission of word guess form, send the guess to the server (via Axios)
 // Update the app homepage with a message declaring the validity of the word guess (ok, not on
 // board, not word)
+// Update the app homepage with updated score
 $guessForm.on("submit", async function (evt) {
     evt.preventDefault();
     const wordGuess = $wordInput.val();
@@ -63,8 +65,6 @@ $guessForm.on("submit", async function (evt) {
     const validity = getValidityMsg(response);
     $validityMsg.text(validity);
 
-    // Update total score
     scoreTotal += calculateScore(wordGuess, validity);
-
-    // TODO: Display total score on main page
+    $scoreTotal.text(`Current score total: ${scoreTotal}`);
 })
