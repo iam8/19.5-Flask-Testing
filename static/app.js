@@ -17,7 +17,7 @@ async function submitGuess(word) {
     const response = await axios.post(
         "/process_guess",
         {
-            "guess": word
+            "guess": word.toLowerCase()
         }
     );
 
@@ -68,3 +68,8 @@ $guessForm.on("submit", async function (evt) {
     scoreTotal += calculateScore(wordGuess, validity);
     $scoreTotal.text(`Current score total: ${scoreTotal}`);
 })
+
+
+// TODO: on DOM load, start a 60-second timer
+// After it expires, disable the form/the button that allows guessing and display a message saying
+// 'time's up'
