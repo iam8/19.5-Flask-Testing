@@ -8,6 +8,7 @@ const $guessForm = $("#guess-form");
 const $wordInput = $("#word-input");
 const $validityMsg = $("#validity-msg");
 const $scoreTotal = $("#score-total");
+const $guessDisplay = $("#guess-display");
 
 let scoreTotal = 0;
 
@@ -56,10 +57,13 @@ function calculateScore(word, validityMsg) {
 // Update the app homepage with a message declaring the validity of the word guess (ok, not on
 // board, not word)
 // Update the app homepage with updated score
+// Display the current guess on page
 $guessForm.on("submit", async function (evt) {
     evt.preventDefault();
     const wordGuess = $wordInput.val();
     $(this).trigger("reset");
+
+    $guessDisplay.text(`You guessed: ${wordGuess}`);
 
     const response = await submitGuess(wordGuess);
     const validity = getValidityMsg(response);
@@ -73,3 +77,4 @@ $guessForm.on("submit", async function (evt) {
 // TODO: on DOM load, start a 60-second timer
 // After it expires, disable the form/the button that allows guessing and display a message saying
 // 'time's up'
+// If the form is submitted before expiration, reset the timer (60s)
