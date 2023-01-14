@@ -12,6 +12,7 @@ const $guessDisplay = $("#guess-display");
 const $formButton = $("#submit-button");
 const $timeRem = $("#time-remaining");
 const $highestScore = $("#highest-score");
+const $numGames = $("#num-games");
 
 const TIMERLENGTH = 60;  // Seconds
 let timerID;
@@ -93,17 +94,22 @@ async function updateMaxScore(score) {
     return response;
 }
 
+
 // Reminder: for now, game ends after timer runs out at any point
 // Clean up after game ends
 // Update text on screen to show it is endgame
 // Disable form button
 // Clear timer
 async function endGame() {
-    $timeRem.text("Time's up!");
     clearInterval(timerID);
-    $formButton.attr("disabled", true);
+
     const response = await updateMaxScore(scoreTotal);
+    const numGames = response.data["num_games"];
     const maxScore = response.data["max_score"];
+
+    $formButton.attr("disabled", true);
+    $timeRem.text("Time's up!");
+    $numGames.text(`Total games played: ${numGames}`);
     $highestScore.text(`Highest score: ${maxScore}`);
 }
 
