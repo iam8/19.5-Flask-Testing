@@ -8,6 +8,7 @@
         <div>{{ row }}</div>
     {% endfor %}
 
+    <p id="time-remaining"></p>
     <p id="score-total">Current score total: 0</p>
 
     <h3>Guess a word!</h3>
@@ -17,7 +18,7 @@
         <label for="word-guess">Guess:</label>
         <input id="word-input" type="text" name="word-guess" placeholder="Enter a word">
 
-        <button>Submit</button>
+        <button id="submit-button">Submit</button>
     </form>
 
     <div id="guess-display"></div>
