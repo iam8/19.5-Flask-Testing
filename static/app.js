@@ -11,6 +11,7 @@ const $scoreTotal = $("#score-total");
 const $guessDisplay = $("#guess-display");
 const $formButton = $("#submit-button");
 const $timeRem = $("#time-remaining");
+const $highestScore = $("#highest-score");
 
 const TIMERLENGTH = 60;  // Seconds
 let timerID;
@@ -18,6 +19,7 @@ let scoreTotal = 0;
 
 
 // Submit the word guess to the server at '/process_guess' and return the server response
+// Server response: JSON; contains a key for 'result' and a value indicating the word's validity
 async function submitGuess(word) {
     const response = await axios.post(
         "/process_guess",
@@ -59,25 +61,48 @@ function calculateScore(word, validityMsg) {
 
 // Start the countdown timer
 // Display time remaining on screen each second
-// Disable the 'submit guess' button if timer expires
+// End the game if timer expires
 let startCountDown = function() {
-    let timeRem = TIMERLENGTH;
+    let timeRem = 15;
     $timeRem.text(`Time remaining: ${timeRem}`);
 
-    let decrementTime = function() {
+    let decrementTime = async function() {
         timeRem--;
         $timeRem.text(`Time remaining: ${timeRem}`);
 
         if (timeRem <= 0) {
-            $timeRem.text("Time's up!");
-            clearInterval(timerID);
-            $formButton.attr("disabled", true);
+            await endGame();
         }
     };
 
     timerID = setInterval(decrementTime, 1000);
 }
 
+
+// Send request to server with Axios with the current score so that the player's max score can
+// be updated
+async function updateMaxScore(score) {
+    const response = await axios.post(
+        "/update_max_score",
+        {
+            "score": score
+        }
+    );
+
+    console.log(response.data);
+}
+
+// Reminder: for now, game ends after timer runs out at any point
+// Clean up after game ends
+// Update text on screen to show it is endgame
+// Disable form button
+// Clear timer
+async function endGame() {
+    $timeRem.text("Time's up!");
+    clearInterval(timerID);
+    $formButton.attr("disabled", true);
+    await updateMaxScore(scoreTotal);
+}
 
 // Upon submission of word guess form, send the guess to the server (via Axios)
 // Update the app homepage with a message declaring the validity of the word guess (ok, not on
