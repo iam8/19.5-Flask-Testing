@@ -50,9 +50,10 @@ def process_guess():
     return jsonify(result=word_validity)
 
 
-@app.route("/update_max_score", methods=["POST"])
-def update_max_score():
+@app.route("/update_stats", methods=["POST"])
+def update_stats():
     """
+    Update player statistics -
     Retrieve user score and update max score in session.
     Update number of total games this user has played (in session).
     """
