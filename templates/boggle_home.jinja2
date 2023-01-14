@@ -8,6 +8,7 @@
         <div>{{ row }}</div>
     {% endfor %}
 
+    <p id="num-games">Total games played: {{ session.get("num_games", "N/A") }}</p>
     <p id="highest-score">Highest score: {{ session.get("max", "N/A") }}</p>
     <p id="score-total">Current score total: 0</p>
 
