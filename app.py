@@ -65,9 +65,7 @@ def update_max_score():
     if score > curr_max:
         is_new_max = True
         session[MAX_SCORE_KEY] = score
-
-    import pdb
-    pdb.set_trace()
+        curr_max = score
 
     return jsonify(is_new_max=is_new_max,
-                   max_score=session[MAX_SCORE_KEY])
+                   max_score=curr_max)
