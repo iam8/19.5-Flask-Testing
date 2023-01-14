@@ -90,6 +90,7 @@ async function updateMaxScore(score) {
     );
 
     console.log(response.data);
+    return response;
 }
 
 // Reminder: for now, game ends after timer runs out at any point
@@ -101,8 +102,11 @@ async function endGame() {
     $timeRem.text("Time's up!");
     clearInterval(timerID);
     $formButton.attr("disabled", true);
-    await updateMaxScore(scoreTotal);
+    const response = await updateMaxScore(scoreTotal);
+    const maxScore = response.data["max_score"];
+    $highestScore.text(`Highest score: ${maxScore}`);
 }
+
 
 // Upon submission of word guess form, send the guess to the server (via Axios)
 // Update the app homepage with a message declaring the validity of the word guess (ok, not on
@@ -110,6 +114,7 @@ async function endGame() {
 // Update the app homepage with updated score
 // Display the current guess on page
 // Reset the 60-second timer
+// Update highest score on page if needed
 $guessForm.on("submit", async function (evt) {
     evt.preventDefault();
     const wordGuess = $wordInput.val();
