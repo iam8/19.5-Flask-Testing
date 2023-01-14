@@ -61,7 +61,7 @@ function calculateScore(word, validityMsg) {
 
 // Start the countdown timer
 // Display time remaining on screen each second
-// End the game if timer expires
+// End the game when timer expires
 let startCountDown = function() {
     let timeRem = 15;
     $timeRem.text(`Time remaining: ${timeRem}`);
@@ -113,7 +113,6 @@ async function endGame() {
 // board, not word)
 // Update the app homepage with updated score
 // Display the current guess on page
-// Reset the 60-second timer
 // Update highest score on page if needed
 $guessForm.on("submit", async function (evt) {
     evt.preventDefault();
@@ -128,10 +127,6 @@ $guessForm.on("submit", async function (evt) {
 
     scoreTotal += calculateScore(wordGuess, validity);
     $scoreTotal.text(`Current score total: ${scoreTotal}`);
-
-    // Reset timer
-    clearInterval(timerID);
-    startCountDown();
 })
 
 
