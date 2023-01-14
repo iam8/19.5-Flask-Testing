@@ -9,7 +9,11 @@ const $wordInput = $("#word-input");
 const $validityMsg = $("#validity-msg");
 const $scoreTotal = $("#score-total");
 const $guessDisplay = $("#guess-display");
+const $formButton = $("#submit-button");
+const $timeRem = $("#time-remaining");
 
+const TIMERLENGTH = 60;  // Seconds
+let timerID;
 let scoreTotal = 0;
 
 
@@ -53,11 +57,34 @@ function calculateScore(word, validityMsg) {
 }
 
 
+// Start the countdown timer
+// Display time remaining on screen each second
+// Disable the 'submit guess' button if timer expires
+let startCountDown = function() {
+    let timeRem = TIMERLENGTH;
+    $timeRem.text(`Time remaining: ${timeRem}`);
+
+    let decrementTime = function() {
+        timeRem--;
+        $timeRem.text(`Time remaining: ${timeRem}`);
+
+        if (timeRem <= 0) {
+            $timeRem.text("Time's up!");
+            clearInterval(timerID);
+            $formButton.attr("disabled", true);
+        }
+    };
+
+    timerID = setInterval(decrementTime, 1000);
+}
+
+
 // Upon submission of word guess form, send the guess to the server (via Axios)
 // Update the app homepage with a message declaring the validity of the word guess (ok, not on
 // board, not word)
 // Update the app homepage with updated score
 // Display the current guess on page
+// Reset the 60-second timer
 $guessForm.on("submit", async function (evt) {
     evt.preventDefault();
     const wordGuess = $wordInput.val();
@@ -71,10 +98,12 @@ $guessForm.on("submit", async function (evt) {
 
     scoreTotal += calculateScore(wordGuess, validity);
     $scoreTotal.text(`Current score total: ${scoreTotal}`);
+
+    // Reset timer
+    clearInterval(timerID);
+    startCountDown();
 })
 
 
-// TODO: on DOM load, start a 60-second timer
-// After it expires, disable the form/the button that allows guessing and display a message saying
-// 'time's up'
-// If the form is submitted before expiration, reset the timer (60s)
+// On DOM load, start countdown timer
+$(startCountDown);
