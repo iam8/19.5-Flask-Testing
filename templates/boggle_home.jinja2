@@ -9,11 +9,10 @@
     {% endfor %}
 
     <p id="highest-score">Highest score: {{ session.get("max", "N/A") }}</p>
-
-    <p id="time-remaining"></p>
     <p id="score-total">Current score total: 0</p>
 
     <h3>Guess a word!</h3>
+    <p id="time-remaining"></p>
 
     {# Form for submitting a word guess #}
     <form id="guess-form" method="POST">
