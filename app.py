@@ -18,6 +18,7 @@ debug = DebugToolbarExtension(app)
 
 BOARD_KEY = "board"
 MAX_SCORE_KEY = "max"
+NUM_GAMES = "num_games"
 
 boggle_game = Boggle()
 
@@ -53,6 +54,7 @@ def process_guess():
 def update_max_score():
     """
     Retrieve user score and update max score in session.
+    Update number of total games this user has played (in session).
     """
 
     request_data = request.get_json()
@@ -66,5 +68,9 @@ def update_max_score():
         session[MAX_SCORE_KEY] = score
         curr_max = score
 
+    session[NUM_GAMES] = session.get(NUM_GAMES, 0) + 1
+    curr_num_games = session[NUM_GAMES]
+
     return jsonify(is_new_max=is_new_max,
-                   max_score=curr_max)
+                   max_score=curr_max,
+                   num_games=curr_num_games)
