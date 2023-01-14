@@ -17,6 +17,7 @@ app.config["SECRET_KEY"] = "ceva foarte secreta"
 debug = DebugToolbarExtension(app)
 
 BOARD_KEY = "board"
+MAX_SCORE_KEY = "max"
 
 boggle_game = Boggle()
 
@@ -29,6 +30,7 @@ def homepage():
 
     board = boggle_game.make_board()
     session[BOARD_KEY] = board
+    session[MAX_SCORE_KEY] = 0
 
     return render_template("/boggle_home.jinja2", board=board)
 
@@ -46,3 +48,26 @@ def process_guess():
     word_validity = boggle_game.check_valid_word(board, guess)
 
     return jsonify(result=word_validity)
+
+
+@app.route("/update_max_score", methods=["POST"])
+def update_max_score():
+    """
+    Retrieve user score and update max score in session.
+    """
+
+    request_data = request.get_json()
+    score = request_data["score"]
+
+    curr_max = session[MAX_SCORE_KEY]
+    is_new_max = False
+
+    if score > curr_max:
+        is_new_max = True
+        session[MAX_SCORE_KEY] = score
+
+    import pdb
+    pdb.set_trace()
+
+    return jsonify(is_new_max=is_new_max,
+                   max_score=session[MAX_SCORE_KEY])
