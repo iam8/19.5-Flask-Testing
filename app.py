@@ -30,7 +30,6 @@ def homepage():
 
     board = boggle_game.make_board()
     session[BOARD_KEY] = board
-    session[MAX_SCORE_KEY] = 0
 
     return render_template("/boggle_home.jinja2", board=board)
 
@@ -59,7 +58,7 @@ def update_max_score():
     request_data = request.get_json()
     score = request_data["score"]
 
-    curr_max = session[MAX_SCORE_KEY]
+    curr_max = session.get(MAX_SCORE_KEY, 0)
     is_new_max = False
 
     if score > curr_max:
