@@ -80,11 +80,10 @@ let startCountDown = function() {
 }
 
 
-// Send request to server with Axios with the current score so that the player's max score can
-// be updated
-async function updateMaxScore(score) {
+// Update player stats: current game score and number of games played
+async function updateStats(score) {
     const response = await axios.post(
-        "/update_max_score",
+        "/update_stats",
         {
             "score": score
         }
@@ -103,7 +102,7 @@ async function updateMaxScore(score) {
 async function endGame() {
     clearInterval(timerID);
 
-    const response = await updateMaxScore(scoreTotal);
+    const response = await updateStats(scoreTotal);
     const numGames = response.data["num_games"];
     const maxScore = response.data["max_score"];
 
