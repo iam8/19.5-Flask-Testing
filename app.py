@@ -12,8 +12,6 @@ from boggle import Boggle
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "ceva foarte secreta"
-# app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
-
 debug = DebugToolbarExtension(app)
 
 BOARD_KEY = "board"
@@ -26,7 +24,9 @@ boggle_game = Boggle()
 @app.route("/", methods=["GET"])
 def homepage():
     """
-    Display the homepage, where the Boggle board will be located.
+    Display the homepage, where the Boggle board and user inputs will be located.
+
+    Store the Boggle board in session.
     """
 
     board = boggle_game.make_board()
@@ -39,6 +39,9 @@ def homepage():
 def process_guess():
     """
     Retrieve and process guess input by user.
+
+    Return JSON that contains the word validity:
+    - {"result": "ok"} | {"result": "not-word"} | {"result": not-on-board}
     """
 
     request_data = request.get_json()
@@ -53,9 +56,9 @@ def process_guess():
 @app.route("/update_stats", methods=["POST"])
 def update_stats():
     """
-    Update player statistics -
-    Retrieve user score and update max score in session.
-    Update number of total games this user has played (in session).
+    Update player statistics:
+    - Retrieve user score and update max score in session.
+    - Update session with number of total games this user has played.
     """
 
     request_data = request.get_json()
