@@ -4,16 +4,22 @@
 
 {% block content %}
 
-    {% for row in board %}
-        <div>{{ row }}</div>
-    {% endfor %}
+    <h1>Boggle</h1>
 
-    <p id="num-games">Total games played: {{ session.get("num_games", "N/A") }}</p>
-    <p id="highest-score">Highest endgame score: {{ session.get("max", "N/A") }}</p>
-    <p id="score-total">Current score: 0</p>
+    <h3>Player Statistics</h3>
+    <div id="num-games">Total games played: {{ session.get("num_games", "N/A") }}</div>
+    <div id="highest-score">Highest endgame score: {{ session.get("max", "N/A") }}</div>
+    <hr>
 
-    <h3>Guess a word!</h3>
-    <p id="time-remaining"></p>
+    <div id="board">
+        {% for row in board %}
+            <div>{{ row }}</div>
+        {% endfor %}
+    </div>
+
+    <h2>Guess a word!</h2>
+    <div id="time-remaining"></div>
+    <div id="score-total">Current score: 0</div>
 
     {# Form for submitting a word guess #}
     <form id="guess-form" method="POST">
@@ -23,6 +29,7 @@
         <button id="submit-button">Submit</button>
     </form>
 
+    <br>
     <div id="guess-display"></div>
     <div id="validity-msg"></div>
 
