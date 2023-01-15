@@ -71,17 +71,41 @@ def update_stats():
     request_data = request.get_json()
     score = request_data["score"]
 
-    curr_max = session.get(MAX_SCORE_KEY, 0)
-    is_new_max = False
+    # curr_max = session.get(MAX_SCORE_KEY, 0)
+    # is_new_max = False
 
-    if score > curr_max:
-        is_new_max = True
+    # if score > curr_max:
+    #     is_new_max = True
+    #     session[MAX_SCORE_KEY] = score
+    #     curr_max = score
+
+    curr_max = update_max_score(score)
+    curr_num_games = update_num_games()
+
+    return jsonify(max_score=curr_max,
+                   num_games=curr_num_games)
+
+
+def update_max_score(score):
+    """
+    Determine if the given score is a new maximum for this user and update user's max game
+    score in session accordingly.
+
+    Return the new maximum score.
+    """
+
+    if score > session.get(MAX_SCORE_KEY, 0):
         session[MAX_SCORE_KEY] = score
-        curr_max = score
+
+    return session[MAX_SCORE_KEY]
+
+
+def update_num_games():
+    """
+    Increment the total number of games this user has played in session and return the updated
+    total.
+    """
 
     session[NUM_GAMES] = session.get(NUM_GAMES, 0) + 1
-    curr_num_games = session[NUM_GAMES]
 
-    return jsonify(is_new_max=is_new_max,
-                   max_score=curr_max,
-                   num_games=curr_num_games)
+    return session[NUM_GAMES]
