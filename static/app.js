@@ -17,6 +17,7 @@ const $numGames = $("#num-games");
 const TIMERLENGTH = 60;  // Seconds
 let timerID;
 let scoreTotal = 0;
+let guesses = new Set();
 
 
 // SENDING REQUESTS TO SERVER ---------------------------------------------------------------------
@@ -60,12 +61,24 @@ async function updateStats(score) {
 // STARTING/ENDING GAME ---------------------------------------------------------------------------
 
 /**
+ * Start game:
+ * - Clear the set of guesses for this game
+ * - Start countdown timer
+ */
+let startGame = function() {
+    console.log("Starting game");
+    guesses.clear();
+    startCountDown();
+}
+
+
+/**
  * Start countdown timer:
  * - Count down from global variable TIMERLENGTH (seconds).
  * - Display remaining time on page.
  * - End game when time expires.
  */
-let startCountDown = function() {
+function startCountDown() {
     let timeRem = TIMERLENGTH;
     $timeRem.text(`Time remaining: ${timeRem}`);
 
@@ -108,24 +121,30 @@ async function endGame() {
 // HELPER FUNCTIONS -------------------------------------------------------------------------------
 
 /**
- * Retrieve word validity from server response and return an appropriate validity message.
+ * Determine and return the appropriate word validity message for the given word guess.
  */
-function getValidityMsg(response) {
-    const validity = response.data["result"];
+async function getValidityMsg(wordGuess) {
+    const guess = wordGuess.toLowerCase();
 
-    if (validity === "duplicate") {
-        return "You have already guessed that!"
+    if (guesses.has(guess)) {
+        return "You have already guessed that!";
     }
+    else {
+        guesses.add(guess);
 
-    if (validity === "ok") {
-        return "The word is valid!"
+        const response = await submitGuess(guess);
+        const validity = response.data["result"];
+
+        if (validity === "ok") {
+            return "The word is valid!"
+        }
+
+        if (validity === "not-on-board") {
+            return "The word doesn't exist on the board - try again!"
+        }
+
+        return "Your guess is not a word - try again!"
     }
-
-    if (validity === "not-on-board") {
-        return "The word doesn't exist on the board - try again!"
-    }
-
-    return "Your guess is not a word - try again!"
 }
 
 
@@ -153,11 +172,13 @@ $guessForm.on("submit", async function (evt) {
 
     $guessDisplay.text(`You guessed: ${wordGuess}`);
 
-    const response = await submitGuess(wordGuess);
-    const validity = getValidityMsg(response);
-    $validityMsg.text(validity);
+    const validityMsg = await getValidityMsg(wordGuess);
+    guesses.add(wordGuess.toLowerCase());
+    console.log(guesses);
 
-    scoreTotal += calculateScore(wordGuess, validity);
+    $validityMsg.text(validityMsg);
+
+    scoreTotal += calculateScore(wordGuess, validityMsg);
     $scoreTotal.text(`Current score total: ${scoreTotal}`);
 })
 
@@ -166,7 +187,7 @@ $guessForm.on("submit", async function (evt) {
 
 // MAIN -------------------------------------------------------------------------------------------
 
-// On DOM load, start countdown timer
-$(startCountDown);
+// On DOM load, start game
+$(startGame);
 
 // ------------------------------------------------------------------------------------------------
