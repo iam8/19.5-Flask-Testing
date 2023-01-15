@@ -19,6 +19,7 @@ MAX_SCORE_KEY = "max"
 NUM_GAMES = "num_games"
 
 boggle_game = Boggle()
+guesses = set()
 
 
 @app.route("/", methods=["GET"])
@@ -26,11 +27,12 @@ def homepage():
     """
     Display the homepage, where the Boggle board and user inputs will be located.
 
-    Store the Boggle board in session.
+    Store the Boggle board in session and clear user guesses.
     """
 
     board = boggle_game.make_board()
     session[BOARD_KEY] = board
+    guesses.clear()
 
     return render_template("/boggle_home.jinja2", board=board)
 
@@ -41,16 +43,21 @@ def process_guess():
     Retrieve and process guess input by user.
 
     Return JSON that contains the word validity:
-    - {"result": "ok"} | {"result": "not-word"} | {"result": not-on-board}
+    - {"result": "ok"} | {"result": "not-word"} | {"result": not-on-board} | {"result":
+     "duplicate"}
     """
 
     request_data = request.get_json()
     guess = request_data["guess"]
-    board = session[BOARD_KEY]
 
-    word_validity = boggle_game.check_valid_word(board, guess)
+    if guess in guesses:
+        result = "duplicate"
+    else:
+        guesses.add(guess)
+        board = session[BOARD_KEY]
+        result = boggle_game.check_valid_word(board, guess)
 
-    return jsonify(result=word_validity)
+    return jsonify(result=result)
 
 
 @app.route("/update_stats", methods=["POST"])

@@ -113,6 +113,10 @@ async function endGame() {
 function getValidityMsg(response) {
     const validity = response.data["result"];
 
+    if (validity === "duplicate") {
+        return "You have already guessed that!"
+    }
+
     if (validity === "ok") {
         return "The word is valid!"
     }
