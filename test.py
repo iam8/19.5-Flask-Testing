@@ -44,7 +44,7 @@ class FlaskTests(TestCase):
         """
         Test submission of word guess:
         - Status code of 200 (OK)
-        - Server response data contains correct key and a message
+        - Server response data (JSON) contains correct key and a message
         """
 
         with app.test_client() as client:
@@ -52,11 +52,12 @@ class FlaskTests(TestCase):
             with client.session_transaction() as change_session:
                 change_session['board'] = Boggle().make_board()
 
-            resp = client.post("/process_guess",
-                               json={"guess": "word"})
-            data = resp.get_data(as_text=True)
+            resp = client.post("/process_guess", json={"guess": "word"})
+            data = resp.get_json()
 
             self.assertEqual(resp.status_code, 200)
+            self.assertIn("result", data)
+            self.assertIn(data["result"], {"ok", "duplicate", "not-on-board", "not-word"})
 
     def test_update_stats(self):
         pass
