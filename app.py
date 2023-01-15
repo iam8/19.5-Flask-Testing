@@ -71,14 +71,6 @@ def update_stats():
     request_data = request.get_json()
     score = request_data["score"]
 
-    # curr_max = session.get(MAX_SCORE_KEY, 0)
-    # is_new_max = False
-
-    # if score > curr_max:
-    #     is_new_max = True
-    #     session[MAX_SCORE_KEY] = score
-    #     curr_max = score
-
     curr_max = update_max_score(score)
     curr_num_games = update_num_games()
 
