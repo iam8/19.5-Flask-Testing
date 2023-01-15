@@ -21,8 +21,10 @@ let scoreTotal = 0;
 
 // SENDING REQUESTS TO SERVER ---------------------------------------------------------------------
 
-// Submit the word guess to the server at '/process_guess' and return the server response
-// Server response: JSON; contains a key for 'result' and a value indicating the word's validity
+/**
+ * Submit user word guess:
+ * - Send the user word guess to the server at '/process_guess' and return the server response.
+ */
 async function submitGuess(word) {
     const response = await axios.post(
         "/process_guess",
@@ -36,6 +38,11 @@ async function submitGuess(word) {
 
 
 // Update player stats: current game score and number of games played
+/**
+ * Update user's statistics:
+ * - Submit user's final game score to the server at 'update_stats/' and return the server
+ * response.
+ */
 async function updateStats(score) {
     const response = await axios.post(
         "/update_stats",
@@ -44,7 +51,6 @@ async function updateStats(score) {
         }
     );
 
-    console.log(response.data);
     return response;
 }
 
@@ -53,9 +59,12 @@ async function updateStats(score) {
 
 // STARTING/ENDING GAME ---------------------------------------------------------------------------
 
-// Start the countdown timer
-// Display time remaining on screen each second
-// End the game when timer expires
+/**
+ * Start countdown timer:
+ * - Count down from global variable TIMERLENGTH (seconds).
+ * - Display remaining time on page.
+ * - End game when time expires.
+ */
 let startCountDown = function() {
     let timeRem = TIMERLENGTH;
     $timeRem.text(`Time remaining: ${timeRem}`);
@@ -73,11 +82,13 @@ let startCountDown = function() {
 }
 
 
-// Reminder: for now, game ends after timer runs out at any point
-// Clean up after game ends
-// Update text on screen to show it is endgame
-// Disable form button
-// Clear timer
+/**
+ * End current game:
+ * - Clear timer
+ * - Update player stats
+ * - Disable guess input button
+ * - Update text on page to reflect end-of-game
+*/
 async function endGame() {
     clearInterval(timerID);
 
@@ -96,8 +107,9 @@ async function endGame() {
 
 // HELPER FUNCTIONS -------------------------------------------------------------------------------
 
-// Get the validity of the word from the server response data and return the appropriate validity
-// message depending on the validity
+/**
+ * Retrieve word validity from server response and return an appropriate validity message.
+ */
 function getValidityMsg(response) {
     const validity = response.data["result"];
 
@@ -113,7 +125,9 @@ function getValidityMsg(response) {
 }
 
 
-// Determine the score for a word guess with the given validity message
+/**
+ * Determine the score for a word guess that has the given validity message.
+ */
 function calculateScore(word, validityMsg) {
     if (validityMsg === "The word is valid!") {
         return word.length;
@@ -127,12 +141,7 @@ function calculateScore(word, validityMsg) {
 
 // EVENT HANDLING ---------------------------------------------------------------------------------
 
-// Upon submission of word guess form, send the guess to the server (via Axios)
-// Update the app homepage with a message declaring the validity of the word guess (ok, not on
-// board, not word)
-// Update the app homepage with updated score
-// Display the current guess on page
-// Update highest score on page if needed
+// Handle click of word guess input button
 $guessForm.on("submit", async function (evt) {
     evt.preventDefault();
     const wordGuess = $wordInput.val();
