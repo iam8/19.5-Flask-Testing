@@ -15,9 +15,9 @@ class FlaskTests(TestCase):
     Tests for every view and helper function in Boggle Flask application (app.py).
     """
 
-    def test_homepage_get(self):
+    def test_get_homepage(self):
         """
-        Test that GET "/" results in a code of 200 (OK) and contains the form to submit a guess.
+        Test that GET "/" results in a code of 200 (OK) and contains a form to submit a guess.
         """
 
         with app.test_client() as client:
@@ -26,6 +26,7 @@ class FlaskTests(TestCase):
 
             self.assertEqual(resp.status_code, 200)
             self.assertIn("<h2>Guess a word!</h2>", html)
+            self.assertIn("<form", html)
 
     def test_initial_session(self):
         """
