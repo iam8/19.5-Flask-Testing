@@ -2,7 +2,7 @@
 # Exercise 19.5 - Flask Testing (Boggle)
 
 from unittest import TestCase
-from app import app
+from app import app, update_max_score, update_num_games
 from flask import session
 from boggle import Boggle
 
@@ -43,9 +43,9 @@ class FlaskTests(TestCase):
 
     def test_guess_submit(self):
         """
-        Test submission of word guess:
+        Test submission of word guess to /process_guess:
         - Status code of 200 (OK)
-        - Server response data (JSON) contains correct key and a message
+        - Server response data (JSON) contains correct key and an appropriate message
         """
 
         with app.test_client() as client:
@@ -64,15 +64,66 @@ class FlaskTests(TestCase):
         """
         Test submission of user score:
         - Status code of 200 (OK)
-        - Server response data (JSON) contains correct keys
+        - Server response data (JSON) contains correct keys and value types
         """
+
+        with app.test_client() as client:
+
+            with client.session_transaction() as change_session:
+                change_session['board'] = Boggle().make_board()
+
+            resp = client.post("/update_stats", json={"score": 5})
+            data = resp.get_json()
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn("max_score", data)
+            self.assertIn("num_games", data)
+            self.assertIsInstance(data["max_score"], int)
+            self.assertIsInstance(data["num_games"], int)
 
     def test_update_max_score(self):
         """
         Test that the max score is updated accordingly in session.
         """
 
+        with app.test_client() as client:
+
+            with client.session_transaction() as change_session:
+                change_session['board'] = Boggle().make_board()
+
+            client.post("/update_stats", json={"score": 0})
+            self.assertEqual(session["max"], 0)
+
+            client.post("/update_stats", json={"score": 3})
+            self.assertEqual(session["max"], 3)
+
+            client.post("/update_stats", json={"score": 7})
+            self.assertEqual(session["max"], 7)
+
+            client.post("/update_stats", json={"score": 7})
+            self.assertEqual(session["max"], 7)
+
+            client.post("/update_stats", json={"score": 1})
+            self.assertEqual(session["max"], 7)
+
     def test_update_num_games(self):
         """
         Test that the number of games is updated accordingly in session.
         """
+
+        with app.test_client() as client:
+
+            with client.session_transaction() as change_session:
+                change_session['board'] = Boggle().make_board()
+
+            client.post("/update_stats", json={"score": 0})
+            self.assertEqual(session["num_games"], 1)
+
+            client.post("/update_stats", json={"score": 3})
+            self.assertEqual(session["num_games"], 2)
+
+            client.post("/update_stats", json={"score": 7})
+            self.assertEqual(session["num_games"], 3)
+
+            client.post("/update_stats", json={"score": 7})
+            self.assertEqual(session["num_games"], 4)
