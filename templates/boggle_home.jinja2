@@ -11,11 +11,15 @@
     <div id="highest-score">Highest endgame score: {{ session.get("max", "N/A") }}</div>
     <hr>
 
-    <div id="board">
+    <table id="board">
         {% for row in board %}
-            <div>{{ row }}</div>
+            <tr>
+                {% for letter in row %}
+                    <td>{{ letter }}</td>
+                {% endfor %}
+            </tr>
         {% endfor %}
-    </div>
+    </table>
 
     <h2>Guess a word!</h2>
     <div id="time-remaining"></div>
