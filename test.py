@@ -2,7 +2,7 @@
 # Exercise 19.5 - Flask Testing (Boggle)
 
 from unittest import TestCase
-from app import app, update_max_score, update_num_games
+from app import app
 from flask import session
 from boggle import Boggle
 
@@ -60,7 +60,7 @@ class FlaskTests(TestCase):
             self.assertIn("result", data)
             self.assertIn(data["result"], {"ok", "duplicate", "not-on-board", "not-word"})
 
-    def test_update_stats(self):
+    def test_update_stats_post(self):
         """
         Test submission of user score:
         - Status code of 200 (OK)
@@ -81,9 +81,9 @@ class FlaskTests(TestCase):
             self.assertIsInstance(data["max_score"], int)
             self.assertIsInstance(data["num_games"], int)
 
-    def test_update_max_score(self):
+    def test_update_stats_max(self):
         """
-        Test that the max score is updated accordingly in session.
+        Test that the user's max score is updated accordingly in session.
         """
 
         with app.test_client() as client:
@@ -106,9 +106,9 @@ class FlaskTests(TestCase):
             client.post("/update_stats", json={"score": 1})
             self.assertEqual(session["max"], 7)
 
-    def test_update_num_games(self):
+    def test_update_stats_num_games(self):
         """
-        Test that the number of games is updated accordingly in session.
+        Test that the user's number of games is updated accordingly in session.
         """
 
         with app.test_client() as client:
