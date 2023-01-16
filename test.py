@@ -61,10 +61,18 @@ class FlaskTests(TestCase):
             self.assertIn(data["result"], {"ok", "duplicate", "not-on-board", "not-word"})
 
     def test_update_stats(self):
-        pass
+        """
+        Test submission of user score:
+        - Status code of 200 (OK)
+        - Server response data (JSON) contains correct keys
+        """
 
     def test_update_max_score(self):
-        pass
+        """
+        Test that the max score is updated accordingly in session.
+        """
 
     def test_update_num_games(self):
-        pass
+        """
+        Test that the number of games is updated accordingly in session.
+        """
