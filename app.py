@@ -19,7 +19,6 @@ MAX_SCORE_KEY = "max"
 NUM_GAMES = "num_games"
 
 boggle_game = Boggle()
-# guesses = set()
 
 
 @app.route("/", methods=["GET"])
@@ -32,7 +31,6 @@ def homepage():
 
     board = boggle_game.make_board()
     session[BOARD_KEY] = board
-    # guesses.clear()
 
     return render_template("/boggle_home.jinja2", board=board)
 
@@ -49,13 +47,6 @@ def process_guess():
 
     request_data = request.get_json()
     guess = request_data["guess"]
-
-    # if guess in guesses:
-    #     result = "duplicate"
-    # else:
-    #     guesses.add(guess)
-    #     board = session[BOARD_KEY]
-    #     result = boggle_game.check_valid_word(board, guess)
 
     board = session[BOARD_KEY]
     result = boggle_game.check_valid_word(board, guess)
