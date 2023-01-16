@@ -174,7 +174,6 @@ $guessForm.on("submit", async function (evt) {
 
     const validityMsg = await getValidityMsg(wordGuess);
     guesses.add(wordGuess.toLowerCase());
-    console.log(guesses);
 
     $validityMsg.text(validityMsg);
 
