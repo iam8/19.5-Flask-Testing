@@ -4,4 +4,51 @@
 
 body {
     background-color: lightblue;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    text-align: center;
+}
+
+h1 {
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    color: midnightblue;
+    font-size: 3em;
+}
+
+h2 {
+    font-size: 2em;
+}
+
+h3 {
+    font-size: 1.5em;
+}
+
+.side-bar {
+    background-color: pink;
+    width: 30%;
+}
+
+/* The section that contains (wraps around) the game board and the areas next to it. */
+#game-section {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin: 15px;
+
+}
+
+/* Individual game board cells. */
+#board td {
+    background-color: beige;
+    width: 55px;
+    height: 55px;
+    border: solid 1px #666;
+    text-align: center;
+    font-size: 1.5em;
+}
+
+#word-input {
+    width: 60%;
+    margin-top: 10px;
 }
