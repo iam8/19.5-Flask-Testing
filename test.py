@@ -62,7 +62,7 @@ class FlaskTests(TestCase):
 
     def test_update_stats_post(self):
         """
-        Test submission of user score:
+        Test submission of user score (POST request):
         - Status code of 200 (OK)
         - Server response data (JSON) contains correct keys and value types
         """
@@ -81,9 +81,10 @@ class FlaskTests(TestCase):
             self.assertIsInstance(data["max_score"], int)
             self.assertIsInstance(data["num_games"], int)
 
-    def test_update_stats_max(self):
+    def test_update_stats_values(self):
         """
-        Test that the user's max score is updated accordingly in session.
+        Test that the user's max score and number of games are updated accordingly in session and
+        returned in the server response.
         """
 
         with app.test_client() as client:
@@ -91,39 +92,26 @@ class FlaskTests(TestCase):
             with client.session_transaction() as change_session:
                 change_session['board'] = Boggle().make_board()
 
-            client.post("/update_stats", json={"score": 0})
+            data0 = client.post("/update_stats", json={"score": 0}).get_json()
             self.assertEqual(session["max"], 0)
-
-            client.post("/update_stats", json={"score": 3})
-            self.assertEqual(session["max"], 3)
-
-            client.post("/update_stats", json={"score": 7})
-            self.assertEqual(session["max"], 7)
-
-            client.post("/update_stats", json={"score": 7})
-            self.assertEqual(session["max"], 7)
-
-            client.post("/update_stats", json={"score": 1})
-            self.assertEqual(session["max"], 7)
-
-    def test_update_stats_num_games(self):
-        """
-        Test that the user's number of games is updated accordingly in session.
-        """
-
-        with app.test_client() as client:
-
-            with client.session_transaction() as change_session:
-                change_session['board'] = Boggle().make_board()
-
-            client.post("/update_stats", json={"score": 0})
             self.assertEqual(session["num_games"], 1)
+            self.assertEqual(data0["max_score"], 0)
+            self.assertEqual(data0["num_games"], 1)
 
-            client.post("/update_stats", json={"score": 3})
+            data1 = client.post("/update_stats", json={"score": 7}).get_json()
+            self.assertEqual(session["max"], 7)
             self.assertEqual(session["num_games"], 2)
+            self.assertEqual(data1["max_score"], 7)
+            self.assertEqual(data1["num_games"], 2)
 
-            client.post("/update_stats", json={"score": 7})
+            data2 = client.post("/update_stats", json={"score": 7}).get_json()
+            self.assertEqual(session["max"], 7)
             self.assertEqual(session["num_games"], 3)
+            self.assertEqual(data2["max_score"], 7)
+            self.assertEqual(data2["num_games"], 3)
 
-            client.post("/update_stats", json={"score": 7})
+            data3 = client.post("/update_stats", json={"score": 1}).get_json()
+            self.assertEqual(session["max"], 7)
             self.assertEqual(session["num_games"], 4)
+            self.assertEqual(data3["max_score"], 7)
+            self.assertEqual(data3["num_games"], 4)
