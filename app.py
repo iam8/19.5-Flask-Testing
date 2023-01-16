@@ -89,7 +89,7 @@ def update_max_score(score):
     Return the new maximum score.
     """
 
-    if score > session.get(MAX_SCORE_KEY, 0):
+    if score >= session.get(MAX_SCORE_KEY, 0):
         session[MAX_SCORE_KEY] = score
 
     return session[MAX_SCORE_KEY]
