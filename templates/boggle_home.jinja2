@@ -11,30 +11,38 @@
     <div id="highest-score">Highest endgame score: {{ session.get("max", "N/A") }}</div>
     <hr>
 
-    <table id="board">
-        {% for row in board %}
-            <tr>
-                {% for letter in row %}
-                    <td>{{ letter }}</td>
-                {% endfor %}
-            </tr>
-        {% endfor %}
-    </table>
+    <div id="game-section">
+        <div class="side-bar">
+            <h2>Guess a word!</h2>
+            <div id="time-remaining"></div>
+            <div id="score-total">Current score: 0</div>
 
-    <h2>Guess a word!</h2>
-    <div id="time-remaining"></div>
-    <div id="score-total">Current score: 0</div>
+            {# Form for submitting a word guess #}
+            <form id="guess-form" method="POST">
+                <label for="word-guess">Guess:</label>
+                <input id="word-input" type="text" name="word-guess" placeholder="Enter a word">
 
-    {# Form for submitting a word guess #}
-    <form id="guess-form" method="POST">
-        <label for="word-guess">Guess:</label>
-        <input id="word-input" type="text" name="word-guess" placeholder="Enter a word">
+                <button id="submit-button">Submit</button>
+            </form>
 
-        <button id="submit-button">Submit</button>
-    </form>
+            <br>
+            <div id="guess-display"></div>
+            <div id="validity-msg"></div>
+        </div>
 
-    <br>
-    <div id="guess-display"></div>
-    <div id="validity-msg"></div>
+        <table id="board">
+            {% for row in board %}
+                <tr>
+                    {% for letter in row %}
+                        <td class="letter-cell">{{ letter }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+
+        <div class="side-bar">
+
+        </div>
+    </div>
 
 {% endblock content %}
